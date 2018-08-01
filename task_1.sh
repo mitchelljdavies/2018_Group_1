@@ -11,8 +11,8 @@ sudo chown -R ec2-user:apache /var/www && echo *** STEP 6/9 COMPLETE *** #Giving
 sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \; && echo *** STEP 7/9 COMPLETE *** #Changing directory permissions
 find /var/www -type f -exec sudo chmod 0664 {} \; && echo *** STEP 8/9 COMPLETE *** #Add group write permissions to /var/www
 
-#LAMP server testing
-echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php && echo LAMP server running and permissions ok
+#Server testing
+echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php && echo Server running and permissions ok
 
 #TODO: mysql_secure_installation (has several prompts that we need to automate)
 sudo systemctl enable mariadb && echo *** STEP 9/9 COMPLETE ***
