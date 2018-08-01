@@ -1,22 +1,3 @@
-!#/usr/bin/env bash
-
-sudo yum update -y && echo *** UPDATES INSTALLED *** #Install updates
-#Apache installation
-sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2 && echo *** STEP 1/9 COMPLETE ***
-sudo yum install -y httpd mariadb-server && echo *** STEP 2/9 COMPLETE *** #installing Apache, MariaDB, PHP
-sudo systemctl start httpd && echo *** STEP 3/9 COMPLETE *** #Start Apache server
-sudo systemctl enable httpd && echo *** STEP 4/9 COMPLETE *** #Start Apache at each system boot
-sudo usermod -a -G apache ec2-user && echo *** STEP 5/9 COMPLETE *** #Adding ourselves as a user to the apache group
-sudo chown -R ec2-user:apache /var/www && echo *** STEP 6/9 COMPLETE *** #Giving the apache group ownership of /var/www
-sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \; && echo *** STEP 7/9 COMPLETE *** #Changing directory permissions
-find /var/www -type f -exec sudo chmod 0664 {} \; && echo *** STEP 8/9 COMPLETE *** #Add group write permissions to /var/www
-
-#Server testing
-echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php && echo Server running and permissions ok
-
-#TODO: mysql_secure_installation (has several prompts that we need to automate)
-sudo systemctl enable mariadb && echo *** STEP 9/9 COMPLETE ***
-
 # TASK 1 INSTALL FILE
 # This file assumes the following about our instance:
 # - That it's running on Linux 2 AMI (might work on other one's too though, not sure if anything about this is unique to Linux 2 AMI)
