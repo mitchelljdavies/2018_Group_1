@@ -31,7 +31,9 @@ curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.pha
 chmod +x wp-cli.phar # Make the WP CLI executable
 sudo mv wp-cli.phar /usr/local/bin/wp # Put it in our PATH so we can just call "wp"
 cd /var/www/html # Navigate to our html directory
-/usr/local/bin/wp core download # Download WordPress Core
-/usr/local/bin/wp core config --dbname=wp-db --dbuser=root --dbpass= # Generate our config file
-/usr/local/bin/wp db create # Create the database for our WordPress site
-/usr/local/bin/wp core install --url="http://13.55.180.175" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
+
+#TODO: From here to the end only works when entering manually
+wp core download # Download WordPress Core
+wp core config --dbname=wp-db --dbuser=root --dbpass= # Generate our config file
+wp db create # Create the database for our WordPress site
+wp core install --url="http://13.55.180.175" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
