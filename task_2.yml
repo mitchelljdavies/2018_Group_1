@@ -4,22 +4,16 @@
   become: false # Don't use sudo
   gather_facts: False
   vars:
-    #key_name: MyKeyPair # This will have to be your own key I think
     instance_type: t2.micro
-    security_group: launch-wizard-1
+    security_group: my-security-group
     image: ami-39f8215b
     region: ap-southeast-2
   tasks:
     - name: Launch instance
       ec2:
-         #key_name: "{{ key_name }}"
-         aws_access_key: "AK123" # Set by running: export AWS_ACCESS_KEY_ID=AK123
-         aws_secret_key: "abc123" # Set by running: export AWS_SECRET_ACCESS_KEY=abc123
          group: "{{ security_group }}"
          instance_type: "{{ instance_type }}"
          image: "{{ image }}"
          wait: true
          region: "{{ region }}"
-         vpc_subnet_id: subnet-29e63245
-         assign_public_ip: yes
       register: ec2
