@@ -16,4 +16,5 @@
          image: "{{ image }}"
          wait: true
          region: "{{ region }}"
+         user_data: "curl -s https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/task_1.sh | bash"
       register: ec2
