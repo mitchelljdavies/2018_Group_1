@@ -1,0 +1,76 @@
+---
+- name: "Install updates/PHP/Apache/MariaDB"
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: install package updates
+      yum:
+        name: '*'
+        state: latest
+
+    - name: install PHP
+      command: amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
+
+    - name: install Apache and MariaDB
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - httpd
+        - mariadb-server
+
+- name: "Start and enable Apache"
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: Start Apache server
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+- name: "Set permissions"
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: Add ourself to Apache group
+      user:
+        name: ec2-user
+        groups: apache
+        append: yes
+      
+
+    - name: Give apache group ownership of /var/www
+      file: 
+        path: /var/www
+        owner: ec2-user
+        group: apache
+        state: directory
+        recurse: yes
+
+    - name: Changing directory permissions
+      file:
+        path: /var/www
+        mode: 02775
+        # Need to change permissions for subdirectories here
+
+    - name: Add group write permissions to /var/www
+      # Need to add 0664 permissions for files here
+
+- name: "Start DB server"
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: Start MariaDB
+      service:
+        name: mariadb
+        state: started
+        enabled: yes       
+
+- name: "Secure DB server"
+ # We may need to replicate mysql_secure_installation here, rather than passing a command to the shell.
+ # See https://stackoverflow.com/questions/25136498/ansible-answers-to-mysql-secure-installation#25140114
