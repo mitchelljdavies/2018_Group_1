@@ -9,7 +9,6 @@
     security_group: my-security-group
     image: ami-39f8215b
     region: ap-southeast-2
-    my_user_data: "curl -s https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/task_1.sh | bash"
   tasks:
     - name: Launch instance
       ec2:
