@@ -1,0 +1,43 @@
+- name: Create a sandbox instance
+  hosts: localhost
+  connection: local
+  become: false # Don't use sudo
+  gather_facts: False
+  vars:
+    key_name: MyKeyPair # This will have to be your own key I think
+    instance_type: t2.micro
+    security_group: my-new-security-group
+    image: ami-39f8215b
+    region: ap-southeast-2
+    my_user_data: "#!/bin/bash\ncurl -s https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/task_1.sh | bash"
+  tasks:
+    - name: Create a security group
+      local_action:
+        module: ec2_group
+        name: "{{ security_group }}"
+        description: Security Group for webserver Servers
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+      register: basic_firewall
+
+    - name: Launch instance
+      ec2:
+         key_name: "{{ key_name }}"
+         group: "{{ security_group }}"
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         wait: true
+         region: "{{ region }}"
+         user_data: "{{ my_user_data }}"
+      register: ec2
