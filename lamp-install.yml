@@ -6,7 +6,7 @@
   tasks:
     - name: install package updates
       yum:
-	      name='*'
+      name='*'
         state=latest
 
     - name: install PHP
@@ -27,7 +27,7 @@
   tasks:
     - name: Start Apache server
       service:
-	name=httpd
+	      name=httpd
         state=started
         enabled=yes
 
@@ -82,7 +82,8 @@
     - name: Unzip WordPress package
       unarchive:
         src=/home/ec2-user/latest.tar.gz
-        dest=/home/ec2-user # Changed from /var/www
+        dest=/home/ec2-user 
+        
   - name: Create MySQL database
       shell: sudo systemctl start mariadb
       shell: mysql -u root -p
