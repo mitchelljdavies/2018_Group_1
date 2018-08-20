@@ -16,7 +16,7 @@
       yum:
         name="{{ packages }}"
       vars:
-	      packages:
+        packages:
         - httpd
         - mariadb-server
 
@@ -27,7 +27,7 @@
   tasks:
     - name: Start Apache server
       service:
-	      name=httpd
+        name=httpd
         state=started
         enabled=yes
 
@@ -61,7 +61,7 @@
   tasks:
     - name: Start MariaDB
       service:
-	      name: mariadb
+        name: mariadb
         state: started
         enabled: yes
 
@@ -76,7 +76,7 @@
   tasks:
     - name: Download WordPress package
       get_url:
-	      url=https://wordpress.org/latest.tar.gz
+        url=https://wordpress.org/latest.tar.gz
         dest=/home/ec2-user/latest.tar.gz
 
     - name: Unzip WordPress package
