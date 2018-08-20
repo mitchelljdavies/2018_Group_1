@@ -84,5 +84,5 @@
         wp core config --dbname=wp-db --dbuser=root --dbpass=test # Generate our config file
         wp db create # Create the database for our WordPress site
         IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) # Get the server's public IP
-      shell: wp core install --url="http://$IP" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
+        wp core install --url="http://$IP" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
      
