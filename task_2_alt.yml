@@ -4,7 +4,6 @@
   become: false # Don't use sudo
   gather_facts: False
   vars:
-    key_name: MyKeyPair # This will have to be your own key I think
     instance_type: t2.micro
     security_group: my-new-security-group
     image: ami-39f8215b
@@ -33,7 +32,6 @@
 
     - name: Launch instance
       ec2:
-         key_name: "{{ key_name }}"
          group: "{{ security_group }}"
          instance_type: "{{ instance_type }}"
          image: "{{ image }}"
