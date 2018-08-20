@@ -6,15 +6,15 @@
   tasks:
     - name: install package updates
       yum:
-        name: '*'
-        state: latest
+      name='*'
+        state=latest
 
     - name: install PHP
       command: amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
 
     - name: install Apache and MariaDB
       yum:
-        name: "{{ packages }}"
+        name="{{ packages }}"
       vars:
         packages:
         - httpd
@@ -27,9 +27,9 @@
   tasks:
     - name: Start Apache server
       service:
-        name: httpd
-        state: started
-        enabled: yes
+        name=httpd
+        state=started
+        enabled=yes
 
 - name: "Set permissions"
   hosts: localhost
@@ -41,24 +41,18 @@
         name: ec2-user
         groups: apache
         append: yes
-      
 
-    - name: Give apache group ownership of /var/www
-      file: 
+
+    - name: Give apache group ownership of /var/www and add permissions
+      file:
         path: /var/www
         owner: ec2-user
         group: apache
-        state: directory
+        mode: 02775
         recurse: yes
 
-    - name: Changing directory permissions
-      file:
-        path: /var/www
-        mode: 02775
-        # Need to change permissions for subdirectories here
-
     - name: Add group write permissions to /var/www
-      # Need to add 0664 permissions for files here
+      command: find /var/www -type f -exec sudo chmod 0664 {} \;
 
 - name: "Start DB server"
   hosts: localhost
@@ -69,8 +63,53 @@
       service:
         name: mariadb
         state: started
-        enabled: yes       
+        enabled: yes
 
-- name: "Secure DB server"
+#- name: "Secure DB server"
  # We may need to replicate mysql_secure_installation here, rather than passing a command to the shell.
  # See https://stackoverflow.com/questions/25136498/ansible-answers-to-mysql-secure-installation#25140114
+
+- name: "Install WordPress"
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: Download WordPress package
+      get_url:
+        url=https://wordpress.org/latest.tar.gz
+        dest=/home/ec2-user/latest.tar.gz
+
+    - name: Unzip WordPress package
+      unarchive:
+        src=/home/ec2-user/latest.tar.gz
+        dest=/home/ec2-user 
+        
+  - name: Create MySQL database
+      shell: sudo systemctl start mariadb
+      shell: mysql -u root -p
+      shell: CREATE USER 'root'@'localhost' IDENTIFIED By 'test';
+      shell: CREATE DATABASE `wp-db`;
+      shell: GRANT ALL PRIVILEGES ON `wp-db`.* TO "root"@"localhost";
+      shell: FLUSH PRIVILEGES;
+      shell: exit
+
+    - name: Copy sample config file
+      command: cp wordpress/wp-config-sample.php wordpress/wp-config.php
+
+    - name: Update WordPress config file
+      lineinfile:
+        path: /var/www/wordpress/wp-config.php
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', 'wp-db');"}
+        - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', 'root');"}
+        - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', 'test');"}
+
+    - name: Update default Apache site
+      shell: cp -r wordpress/* /var/www/html/
+
+    - name: Restart Apache
+      service:
+        name: httpd
+        state: restarted
