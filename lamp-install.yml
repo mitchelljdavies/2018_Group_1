@@ -87,6 +87,7 @@
   - name: Create MySQL database
       shell: sudo systemctl start mariadb
       shell: mysql -u root -p
+      shell:
       shell: CREATE USER 'root'@'localhost' IDENTIFIED By 'test';
       shell: CREATE DATABASE `wp-db`;
       shell: GRANT ALL PRIVILEGES ON `wp-db`.* TO "root"@"localhost";
