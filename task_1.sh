@@ -24,7 +24,7 @@ chmod +x wp-cli.phar # Make the WP CLI executable
 sudo mv wp-cli.phar /usr/local/bin/wp # Put it in our PATH so we can just call "wp"
 cd /var/www/html # Navigate to our html directory
 wp core download # Download WordPress Core
-wp core config --dbname=wp-db --dbuser=root --dbpass=test # Generate our config file
+wp core config --dbname=wpdb --dbuser=root --dbpass=test # Generate our config file
 wp db create # Create the database for our WordPress site
 IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) # Get the server's public IP
 wp core install --url="http://$IP" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
