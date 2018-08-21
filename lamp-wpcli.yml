@@ -19,6 +19,7 @@
         packages:
         - httpd
         - mariadb-server
+        - MySQL-python
 
 - name: "Start and enable Apache"
   hosts: localhost
@@ -74,15 +75,33 @@
   become: yes
   become_user: root
   tasks:
-    - name: Install WordPress through CLI
-      shell: |
-        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar # Download the WP CLI
-        chmod +x wp-cli.phar # Make the WP CLI executable
-        sudo mv wp-cli.phar /usr/local/bin/wp # Put it in our PATH so we can just call "wp"
-        cd /var/www/html # Navigate to our html directory
-        wp core download # Download WordPress Core
-        wp core config --dbname=wp-db --dbuser=root --dbpass=test # Generate our config file
-        wp db create # Create the database for our WordPress site
-        IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) # Get the server's public IP
-        wp core install --url="http://$IP" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" # Install WordPress and set up our user
+    - name: Download pexpect
+      shell: sudo pip install pexpect
+
+    - name: Download WordPress CLI
+      shell: curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+    - name: Make the CLI executable
+      shell: chmod +x wp-cli.phar
+
+    - name: Put the CLI in PATH
+      shell: sudo mv wp-cli.phar /usr/local/bin/wp
+
+    - name: Navigate to html directory
+      shell: cd /var/www/html
+
+    - name: Download WordPress core
+      shell: /usr/local/bin/wp core download
+
+    - name: Generate wp-config file
+      shell: /usr/local/bin/wp config create --dbname=wp-db --dbuser=root --dbpass=test 
+
+    - name: Create the database for the WordPress site
+      shell: /usr/local/bin/wp db create 
+
+    - name: Get the server's public IP
+      shell: IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) 
+
+    - name: Install WordPress and set up the user
+      shell: /usr/local/bin/wp core install --url="http://$IP" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz"
      
