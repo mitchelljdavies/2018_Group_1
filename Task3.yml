@@ -5,17 +5,35 @@
   become: False
   #vars: #Add variables here
   tasks:
-    - name: Set up an alarm
+    - name: Set up an alarm for checking if the system fails any status checks
       ec2_metric_alarm:
         name: "status-check"
         state: present
         region: us-west-2
+        #region: ap-southeast-2
         metric: "StatusCheckFailed"
         namespace: "AWS/EC2"
         statistic: Average
         comparison: ">="
-        threshold: 1 
+        threshold: 1
         period: 900 # 15 minute evaluation period
         evaluation_periods: 1 # triggers the alarm if the average number of failures in one 15-minute period is more than 1
         dimensions: {'InstanceId':'i-01b42266c128e122b'} # What the alarm is applied to
+        #dimensions: {'InstanceId':'i-0ad10f3291397632f'} # What the alarm is applied to
+        # alarm_actions: # What happens when the alarm is in 'alarm' status
+    - name: Set up an alarm for checking any website 404 errors
+      ec2_metric_alarm:
+        name: "website-down-check"
+        state: present
+        region: us-west-2
+        #region: ap-southeast-2
+        metric: "404ErrorCount"
+        namespace: "MyMetrics"
+        statistic: Average
+        comparison: ">="
+        threshold: 1
+        period: 900 # 15 minute evaluation period
+        evaluation_periods: 1 # triggers the alarm if the average number of failures in one 15-minute period is more than 1
+        #dimensions: {'InstanceId':'i-01b42266c128e122b'} # What the alarm is applied to
+        #dimensions: {'InstanceId':'i-0ad10f3291397632f'} # What the alarm is applied to
         # alarm_actions: # What happens when the alarm is in 'alarm' status
