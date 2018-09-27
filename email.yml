@@ -7,6 +7,6 @@
       mail: 
         host: localhost
         port: 25
-        to: Antony Sellars <amsellars@gmail.com>
+        to: Firstname Lastname <email@email.com>
         subject: Ansible
         body: Testing Ansible email
