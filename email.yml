@@ -2,11 +2,15 @@
 - hosts: localhost
   connection: local
   become: false
+  vars:
+    firstName: #First name here (no quotes)
+    lastName: #Last name here (no quotes)
+    emailAddress: #email here (no quotes)
   tasks:
     - name: Send an email
-      mail: 
-        host: localhost
+      mail:
+	host: localhost
         port: 25
-        to: Firstname Lastname <email@email.com>
+        to: "{{ firstName }} {{ lastName }} <{{ emailAddress }}>"
         subject: Ansible
         body: Testing Ansible email
