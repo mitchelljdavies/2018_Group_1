@@ -1,0 +1,17 @@
+- hosts: localhost
+  connection: local
+  become: false # Don't use sudo for this part
+  vars:
+    region: us-west-2 #ap-southeast-2
+  tasks:
+    - name: Gather EC2 facts
+      ec2_instance_facts:
+        region: "{{ region }}"
+        filters:
+          "tag:Type": "clientsites"
+      register: ec2
+    - debug: var=ec2
+
+    - name: Checking instance's homepage URL to confirm it is live...
+      command: curl -s https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/checkurl.sh | bash -s "{{ item.public_ip_address }}"
+      with_items: "{{ ec2.instances }}"
