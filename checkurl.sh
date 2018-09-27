@@ -8,8 +8,10 @@
 if curl -s --head  --request GET $1 | grep "404" > /dev/null # Check for 404 error on the page
 then
    echo "404 $1" # Just echo the error but this can be extended to create a notification
+   ansible-playbook email.yml
 fi
 if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
 then
    echo "500 $1" # Just echo the error but this can be extended to create a notification
+   ansible-playbook email.yml
 fi
