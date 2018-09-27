@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  become: false
+  tasks:
+    - name: Send an email
+      mail: 
+        host: localhost
+        port: 25
+        to: Antony Sellars <amsellars@gmail.com>
+        subject: Ansible
+        body: Testing Ansible email
