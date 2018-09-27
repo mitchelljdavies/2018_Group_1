@@ -7,8 +7,8 @@
     key_name: newkey # This is the name of the key we set up in the instructions for task 1 & 2.
     instance_type: t2.micro
     security_group: my-new-security-group
-    image: ami-39f8215b
-    region: ap-southeast-2
+    image: ami-6cd6f714
+    region: us-west-2
   tasks:
     - name: Create a security group
       local_action:
@@ -146,4 +146,4 @@
     - name: Creating our database
       command: /usr/local/bin/wp db create --path="/var/www/html/"
     - name: Installing WordPress
-      command: /usr/local/bin/wp core install --url="http://52.65.11.21" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" --path="/var/www/html/"
+      shell: /usr/local/bin/wp core install --url="http://$(curl http://169.254.169.254/latest/meta-data/public-ipv4)" --title="Assignment 1 WordPress Site" --admin_user="group_1" --admin_password="alpha wario salamander" --admin_email="test@test.co.nz" --path="/var/www/html/"
