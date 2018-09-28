@@ -9,8 +9,8 @@
   tasks:
     - name: Send an email
       mail:
-	host: localhost
+	    host: localhost
         port: 25
         to: "{{ firstName }} {{ lastName }} <{{ emailAddress }}>"
-        subject: Ansible
-        body: Testing Ansible email
+        subject: EC2 instance {{ lookup('env', 'problemIP') }} returned an error
+        body: Hello, your EC2 instance with IP address "{{ lookup('env', 'problemIP') }}" returned a *Error type to go here* error. Please investigate.
