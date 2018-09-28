@@ -24,6 +24,11 @@
         group: apache
         mode: 0777
 
+    - name: Download our email sender playbook
+      get_url:
+        url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml
+        dest=/var/www/html/
+
     - name: Checking instance's homepage URL to confirm it is live...
       command: /var/www/html/./checkurl.sh "{{ item.public_ip_address }}"
       with_items: "{{ ec2.instances }}"

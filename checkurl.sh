@@ -9,21 +9,32 @@ if curl -s --head  --request GET $1 | grep "404" > /dev/null # Check for 404 err
 then
   export problemIP=$1 # Store the Public IP as an environment variable
   export problemError="404" # Store the error as an environment variable
-  echo "404 $1"  # Echo out the error for debugging purposes
-  if [ ! -e email.yml ] # Check if the email.yml exists on the server and if not then pull it down
-  then
-    wget https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml #Get email.yml TODO: Change to master branch when we merge it in
-  fi
   ansible-playbook email.yml #Send the error notification email
 fi
-  if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
-  then
+if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
+then
   export problemIP=$1 # Store the Public IP as an environment variable
   export problemError="500" # Store the error as an environment variable
-  echo "500 $1" # Echo out the error for debugging purposes
-  if [ ! -e email.yml ] # Check if the email.yml exists on the server and if not then pull it down
-  then
-    wget https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml #Get email.yml TODO: Change to master branch when we merge it in
-  fi
   ansible-playbook email.yml #Send the error notification email
+fi
+if curl -s --head  --request GET $1 | grep "200" > /dev/null # Check for 200 success on the page in which case we check the homepage's outbound links
+then
+  wget -O - $1 | \
+  grep -o '<a href=['"'"'"][^"'"'"']*['"'"'"]' | \
+  sed -e 's/^<a href=["'"'"']//' -e 's/["'"'"']$//' | \
+  awk '!a[$0]++' | while read line
+  do
+  	if curl -s --head  --request GET $line | grep "404" > /dev/null # Check for 404 error on the page
+  	then
+      export problemIP=$1 # Store the Public IP as an environment variable
+      export problemError="404_link_$line" # Store the error as an environment variable
+      ansible-playbook email.yml #Send the error notification email
+  	fi
+  	if curl -s --head  --request GET $line | grep "500" > /dev/null # Check for 500 error on the page
+  	then
+      export problemIP=$1 # Store the Public IP as an environment variable
+      export problemError="500_link_$line" # Store the error as an environment variable
+      ansible-playbook email.yml #Send the error notification email
+  	fi
+  done
 fi
