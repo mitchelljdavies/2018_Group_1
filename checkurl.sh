@@ -8,12 +8,14 @@
 if curl -s --head  --request GET $1 | grep "404" > /dev/null # Check for 404 error on the page
 then
    export problemIP=$1 #Store the IP that's returning 404 in a variable for use in the notification email
+   export problemError="404"
    echo "404 $1" # Just echo the error but this can be extended to create a notification
    ansible-playbook email.yml #Send the error notification email
 fi
 if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
 then
-   export problemIP=$1 #Store the IP that's returning 500 in a variable for use in the notification email 
+   export problemIP=$1 #Store the IP that's returning 500 in a variable for use in the notification email
+   export problemError="500"
    echo "500 $1" # Just echo the error but this can be extended to create a notification
    ansible-playbook email.yml #Send the error notification email
 fi

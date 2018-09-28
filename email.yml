@@ -2,15 +2,11 @@
 - hosts: localhost
   connection: local
   become: false
-  vars:
-    firstName: #First name here (no quotes)
-    lastName: #Last name here (no quotes)
-    emailAddress: #email here (no quotes)
   tasks:
     - name: Send an email
       mail:
         host: localhost
         port: 25
-        to: "{{ firstName }} {{ lastName }} <{{ emailAddress }}>"
-        subject: EC2 instance {{ lookup('env', 'problemIP') }} returned an error
-        body: Hello, your EC2 instance with IP address "{{ lookup('env', 'problemIP') }}" returned a *Error type to go here* error. Please investigate.
+        to: "Web Master <{{ lookup('env', 'webmasterEmail') }}>"
+        subject: EC2 instance {{ lookup('env', 'problemIP') }} returned an error {{ lookup('env', 'problemError') }}
+        body: Hello, your EC2 instance with IP address "{{ lookup('env', 'problemIP') }}" returned a {{ lookup('env', 'problemError') }} error. Please investigate.
