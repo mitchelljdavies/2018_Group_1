@@ -7,15 +7,23 @@
 
 if curl -s --head  --request GET $1 | grep "404" > /dev/null # Check for 404 error on the page
 then
-   export problemIP=$1 #Store the IP that's returning 404 in a variable for use in the notification email
-   export problemError="404"
-   echo "404 $1" # Just echo the error but this can be extended to create a notification
-   ansible-playbook email.yml #Send the error notification email
+  export problemIP=$1 # Store the Public IP as an environment variable
+  export problemError="404" # Store the error as an environment variable
+  echo "404 $1"  # Echo out the error for debugging purposes
+  if [ ! -e email.yml ] # Check if the email.yml exists on the server and if not then pull it down
+  then
+    wget https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml #Get email.yml TODO: Change to master branch when we merge it in
+  fi
+  ansible-playbook email.yml #Send the error notification email
 fi
-if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
-then
-   export problemIP=$1 #Store the IP that's returning 500 in a variable for use in the notification email
-   export problemError="500"
-   echo "500 $1" # Just echo the error but this can be extended to create a notification
-   ansible-playbook email.yml #Send the error notification email
+  if curl -s --head  --request GET $1 | grep "500" > /dev/null # Check for 500 error on the page
+  then
+  export problemIP=$1 # Store the Public IP as an environment variable
+  export problemError="500" # Store the error as an environment variable
+  echo "500 $1" # Echo out the error for debugging purposes
+  if [ ! -e email.yml ] # Check if the email.yml exists on the server and if not then pull it down
+  then
+    wget https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml #Get email.yml TODO: Change to master branch when we merge it in
+  fi
+  ansible-playbook email.yml #Send the error notification email
 fi
