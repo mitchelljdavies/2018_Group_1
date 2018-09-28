@@ -4,7 +4,7 @@
   vars:
     region: us-west-2 #ap-southeast-2
   tasks:
-    - name: Gather EC2 facts
+    - name: Gathering all of our tagged instances
       ec2_instance_facts:
         region: "{{ region }}"
         filters:
@@ -29,7 +29,7 @@
         url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/Task_3/email.yml
         dest=/var/www/html/
 
-    - name: Checking instance's homepage URL to confirm it is live...
+    - name: Checking instance's homepage URL and it's links to confirm it is live...
       command: /var/www/html/./checkurl.sh "{{ item.public_ip_address }}"
       with_items: "{{ ec2.instances }}"
       register: checkurl
