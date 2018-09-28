@@ -24,6 +24,10 @@ then
   sed -e 's/^<a href=["'"'"']//' -e 's/["'"'"']$//' | \
   awk '!a[$0]++' | while read line
   do
+    if [[ $line == /* ]] # If our line starts with a slash it's a relative url and we should append our Public IP onto it
+    then
+      line="$1$line" # Merge our Public IP and this relative path link back into the line variable
+    fi
   	if curl -s --head  --request GET $line | grep "404" > /dev/null # Check for 404 error on the page
   	then
       export problemIP=$1 # Store the Public IP as an environment variable
