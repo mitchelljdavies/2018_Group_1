@@ -9,7 +9,7 @@
   tasks:
     - name: Send an email
       mail:
-	    host: localhost
+        host: localhost
         port: 25
         to: "{{ firstName }} {{ lastName }} <{{ emailAddress }}>"
         subject: EC2 instance {{ lookup('env', 'problemIP') }} returned an error
