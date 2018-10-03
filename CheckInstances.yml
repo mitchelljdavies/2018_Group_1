@@ -12,10 +12,10 @@
       register: ec2
     - debug: var=ec2
 
-    - name: Download our URL checking script
-      get_url:
-        url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/checkurl.sh
-        dest=/var/www/html/
+#    - name: Download our URL checking script
+#      get_url:
+#        url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/checkurl.sh
+#        dest=/var/www/html/
 
     - name: Make sure it's executable
       file:
@@ -24,10 +24,10 @@
         group: apache
         mode: 0777
 
-    - name: Download our email sender playbook
-      get_url:
-        url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/email.yml
-        dest=/var/www/html/
+#    - name: Download our email sender playbook
+#      get_url:
+#        url=https://raw.githubusercontent.com/mitchelljdavies/2018_Group_1/master/email.yml
+#        dest=/var/www/html/
 
     - name: Checking instance's homepage URL and it's links to confirm it is live...
       command: /var/www/html/./checkurl.sh "{{ item.public_ip_address }}"
