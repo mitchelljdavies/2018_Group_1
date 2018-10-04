@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-
-# WEB SERVER 1 INSTALL FILE
-# This file assumes the following about our instance:
-# - That it's running on Linux 2 AMI (might work on other one's too though, not sure if anything about this is unique to Linux 2 AMI)
-
-# LAMP SETUP
 sudo yum update -y && # Install package updates
 sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2 # Install PHP
 sudo yum install -y httpd mariadb-server # Installing Apache & MariaDB
@@ -17,8 +11,6 @@ find /var/www -type f -exec sudo chmod 0664 {} \; # Add group write permissions 
 sudo systemctl start mariadb # Start the database server
 printf '\ny\ntest\ntest\ny\ny\ny\ny\n' | sudo mysql_secure_installation # Secure SQL installation
 sudo systemctl enable mariadb # Start the database server at each system boot
-
-# WP SETUP
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar # Download the WP CLI
 chmod +x wp-cli.phar # Make the WP CLI executable
 sudo mv wp-cli.phar /usr/local/bin/wp # Put it in our PATH so we can just call "wp"
