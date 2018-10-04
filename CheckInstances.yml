@@ -8,7 +8,7 @@
       ec2_instance_facts:
         region: "{{ region }}"
         filters:
-          "tag:Type": "clientsites"
+          "tag:type": clientsites
       register: ec2
     - debug: var=ec2
 
